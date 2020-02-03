@@ -35,7 +35,13 @@ public class Connection {
 		// TODO
 		// encapsulate the data contained in the message and write to the output stream
 		// Hint: use the encapsulate method on the message
-		throw new UnsupportedOperationException(TODO.method());
+
+		try {
+			outStream.write(message.encapsulate(), 0, MessageConfig.SEGMENTSIZE);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -47,10 +53,22 @@ public class Connection {
 		// TODO
 		// read a segment (128 bytes) from the input stream and decapsulate into message
 		// Hint: create a new Message object and use the decapsulate method
-		
-		if (true) {
-			throw new RuntimeException("not yet implemented");
+
+		// ANSWER
+		// Create byte with the size of MessageConfig.Segmentsize
+		recvbuf = new byte[MessageConfig.SEGMENTSIZE];
+		try {
+			// read inStream from place 0 -> MessageConfig.SegementSize and add the result in recvbuf
+			inStream.read(recvbuf, 0, MessageConfig.SEGMENTSIZE);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		// Create new message
+		message = new Message();
+		
+		// Decapsulate the readed message and put it in the message-object.
+		message.decapsulate(recvbuf);
 
 		return message;
 
