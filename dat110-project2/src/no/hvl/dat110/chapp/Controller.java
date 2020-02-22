@@ -12,8 +12,8 @@ public class Controller {
 	private Client client;
 	private boolean isconnected = false;
 	
-	private static String DEFAULT_USER = "me";
-	private static String DEFAULT_BROKERHOST = "localhost";
+	private static String DEFAULT_USER = "macbook";
+	private static String DEFAULT_BROKERHOST = "192.168.80.200";
 	private static int DEFAULT_BROKERPORT = 8080;
 	
 	public Controller (MessageArea messagearea) {
