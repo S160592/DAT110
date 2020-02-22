@@ -143,7 +143,6 @@ public class Dispatcher extends Stopable {
 
 		clients.stream().filter(c -> storage.subscriptions.get(msg.getTopic()).contains(c.getUser()))
 				.forEach(c -> c.send(msg));
-
 	}
 	
 }
