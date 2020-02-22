@@ -4,6 +4,6 @@ Ferdig og godkjendt.
 
 
 # DAT110 - Oblig 3
-### 3.februar 2020
+### 22.februar 2020
 Lasta opp start-code frå oppgåva
 
