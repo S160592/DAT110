@@ -96,6 +96,7 @@ public class Dispatcher extends Stopable {
 	}
 
 	// called by dispatch upon receiving a disconnect message
+	
 	public void onDisconnect(DisconnectMsg msg) {
 
 		String user = msg.getUser();
