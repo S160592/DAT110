@@ -2,6 +2,7 @@ package no.hvl.dat110.broker;
 
 import java.util.Set;
 import java.util.Collection;
+import java.util.HashSet;
 
 import no.hvl.dat110.common.TODO;
 import no.hvl.dat110.common.Logger;
@@ -92,17 +93,37 @@ public class Dispatcher extends Stopable {
 		Logger.log("onConnect:" + msg.toString());
 
 		storage.addClientSession(user, connection);
+		
+		 if (storage.getDisconnectedClients().containsKey(user)) {
+
+             for (String id : storage.getDisconnectedClients().get(user)) {
+      
+                 MessageUtils.send(connection, storage.bufferedMessages.get(id));
+
+                 Logger.log("sending unread message to " + user);
+
+                 storage.bufferedMessages.remove(id);
+
+             }
+             
+		 }
+		
+		
+		
+		
+		
+		
 
 	}
 
 	// called by dispatch upon receiving a disconnect message
-	
+
 	public void onDisconnect(DisconnectMsg msg) {
 
 		String user = msg.getUser();
 
 		Logger.log("onDisconnect:" + msg.toString());
-
+		storage.addToDisconnected(user);
 		storage.removeClientSession(user);
 
 	}
@@ -142,9 +163,33 @@ public class Dispatcher extends Stopable {
 
 		Collection<ClientSession> clients = storage.getSessions();
 
-		clients.stream().filter(c -> storage.subscriptions.get(msg.getTopic()).contains(c.getUser()))
-				.forEach(c -> c.send(msg));
+//		clients.forEach(c -> c.send(msg));
+		
+		
+		for (ClientSession client : clients) {
+
+            if (storage.subscriptions.get(msg.getTopic()).contains(client.getUser())) {
+            	client.send(msg);
+//                MessageUtils.send(client.getConnection(), msg);
+
+            }
+
+        }
+
+        // Stores the message if subscribed user is offline
+
+        for (String subbedUser : storage.getSubscribers(msg.getTopic())) {
+
+            if (storage.disconnectedClients.containsKey(subbedUser)) {
+
+                storage.addToBufferAndToUnread(msg.getTopic(), msg, subbedUser);
+
+            }
+
+        }
+		
+		
 		
 	}
-	
+
 }

@@ -1,12 +1,14 @@
 package no.hvl.dat110.broker;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import no.hvl.dat110.common.TODO;
-import no.hvl.dat110.common.Logger;
+import no.hvl.dat110.messages.Message;
 import no.hvl.dat110.messagetransport.Connection;
 
 public class Storage {
@@ -20,14 +22,44 @@ public class Storage {
 
 	protected ConcurrentHashMap<String, ClientSession> clients;
 
+	protected ConcurrentHashMap<String, Set<String>> disconnectedClients;
+
+	protected ConcurrentHashMap<String, Message> bufferedMessages;
+
 	public Storage() {
 		subscriptions = new ConcurrentHashMap<String, Set<String>>();
 		clients = new ConcurrentHashMap<String, ClientSession>();
+		disconnectedClients = new ConcurrentHashMap<>();
+
+		bufferedMessages = new ConcurrentHashMap<>();
+
 	}
+
+	public ConcurrentHashMap<String, Set<String>> getDisconnectedClients() {
+
+		return disconnectedClients;
+
+	}
+	
+	   public void addToDisconnected(String user) {
+
+	        disconnectedClients.put(user, new HashSet<>());
+
+	    }
 
 	public Collection<ClientSession> getSessions() {
 		return clients.values();
 	}
+	
+	 public void addToBufferAndToUnread(String topic, Message msg, String user) {
+
+	        String uniqueID = UUID.randomUUID().toString();
+
+	        disconnectedClients.get(user).add(uniqueID);
+
+	        bufferedMessages.put(uniqueID, msg);
+
+	    }
 
 	public Set<String> getTopics() {
 
@@ -81,6 +113,18 @@ public class Storage {
 	public void removeSubscriber(String user, String topic) {
 
 		subscriptions.get(topic).remove(user);
+
+	}
+
+	public ConcurrentHashMap<String, ClientSession> getClients() {
+
+		return clients;
+
+	}
+
+	public void setClients(ConcurrentHashMap<String, ClientSession> clients) {
+
+		this.clients = clients;
 
 	}
 
