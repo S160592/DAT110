@@ -163,7 +163,7 @@ public class Dispatcher extends Stopable {
 
 		Collection<ClientSession> clients = storage.getSessions();
 
-//		clients.forEach(c -> c.send(msg));
+
 		
 		
 		for (ClientSession client : clients) {
