@@ -5,5 +5,4 @@ Ferdig og godkjendt.
 
 # DAT110 - Oblig 3
 ### 22.februar 2020
-Lasta opp start-code frå oppgåva
-
+Ferdig med task E. Gjer ikkje task F ettesom det er valgfri.
