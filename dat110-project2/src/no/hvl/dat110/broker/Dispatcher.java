@@ -98,11 +98,11 @@ public class Dispatcher extends Stopable {
 
              for (String id : storage.getDisconnectedClients().get(user)) {
       
-                 MessageUtils.send(connection, storage.bufferedMessages.get(id));
+                 MessageUtils.send(connection, storage.bufferredUserMsg.get(id));
 
                  Logger.log("sending unread message to " + user);
 
-                 storage.bufferedMessages.remove(id);
+                 storage.bufferredUserMsg.remove(id);
 
              }
              
@@ -180,7 +180,7 @@ public class Dispatcher extends Stopable {
 
         for (String subbedUser : storage.getSubscribers(msg.getTopic())) {
 
-            if (storage.disconnectedClients.containsKey(subbedUser)) {
+            if (storage.disconnectedUsers.containsKey(subbedUser)) {
 
                 storage.addToBufferAndToUnread(msg.getTopic(), msg, subbedUser);
 
