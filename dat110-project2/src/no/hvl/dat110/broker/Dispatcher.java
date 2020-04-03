@@ -93,26 +93,19 @@ public class Dispatcher extends Stopable {
 		Logger.log("onConnect:" + msg.toString());
 
 		storage.addClientSession(user, connection);
-		
-		 if (storage.getDisconnectedClients().containsKey(user)) {
 
-             for (String id : storage.getDisconnectedClients().get(user)) {
-      
-                 MessageUtils.send(connection, storage.bufferedMessages.get(id));
+		if (storage.getDisconnectedClients().containsKey(user)) {
 
-                 Logger.log("sending unread message to " + user);
+			for (String id : storage.getDisconnectedClients().get(user)) {
+				storage.getSession(user).send(storage.bufferredUserMsg.get(id));
 
-                 storage.bufferedMessages.remove(id);
+				Logger.log("sending unread message to " + user);
 
-             }
-             
-		 }
-		
-		
-		
-		
-		
-		
+				storage.bufferredUserMsg.remove(id);
+
+			}
+
+		}
 
 	}
 
@@ -163,33 +156,24 @@ public class Dispatcher extends Stopable {
 
 		Collection<ClientSession> clients = storage.getSessions();
 
-
-		
-		
 		for (ClientSession client : clients) {
 
-            if (storage.subscriptions.get(msg.getTopic()).contains(client.getUser())) {
-            	client.send(msg);
-//                MessageUtils.send(client.getConnection(), msg);
+			if (storage.subscriptions.get(msg.getTopic()).contains(client.getUser())) {
+				client.send(msg);
+			}
 
-            }
+		}
 
-        }
+		for (String subbedUser : storage.getSubscribers(msg.getTopic())) {
 
-        // Stores the message if subscribed user is offline
+			if (storage.disconnectedUsers.containsKey(subbedUser)) {
 
-        for (String subbedUser : storage.getSubscribers(msg.getTopic())) {
+				storage.addToBufferAndToUnread(msg.getTopic(), msg, subbedUser);
 
-            if (storage.disconnectedClients.containsKey(subbedUser)) {
+			}
 
-                storage.addToBufferAndToUnread(msg.getTopic(), msg, subbedUser);
+		}
 
-            }
-
-        }
-		
-		
-		
 	}
 
 }

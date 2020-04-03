@@ -22,28 +22,27 @@ public class Storage {
 
 	protected ConcurrentHashMap<String, ClientSession> clients;
 
-	protected ConcurrentHashMap<String, Set<String>> disconnectedClients;
+	protected ConcurrentHashMap<String, Set<String>> disconnectedUsers;
 
-	protected ConcurrentHashMap<String, Message> bufferedMessages;
+	protected ConcurrentHashMap<String, Message> bufferredUserMsg;
 
 	public Storage() {
 		subscriptions = new ConcurrentHashMap<String, Set<String>>();
 		clients = new ConcurrentHashMap<String, ClientSession>();
-		disconnectedClients = new ConcurrentHashMap<>();
-
-		bufferedMessages = new ConcurrentHashMap<>();
+		disconnectedUsers = new ConcurrentHashMap<>();
+		bufferredUserMsg = new ConcurrentHashMap<>();
 
 	}
 
 	public ConcurrentHashMap<String, Set<String>> getDisconnectedClients() {
 
-		return disconnectedClients;
+		return disconnectedUsers;
 
 	}
 	
 	   public void addToDisconnected(String user) {
 
-	        disconnectedClients.put(user, new HashSet<>());
+	        disconnectedUsers.put(user, new HashSet<>());
 
 	    }
 
@@ -55,9 +54,9 @@ public class Storage {
 
 	        String uniqueID = UUID.randomUUID().toString();
 
-	        disconnectedClients.get(user).add(uniqueID);
+	        disconnectedUsers.get(user).add(uniqueID);
 
-	        bufferedMessages.put(uniqueID, msg);
+	        bufferredUserMsg.put(uniqueID, msg);
 
 	    }
 
