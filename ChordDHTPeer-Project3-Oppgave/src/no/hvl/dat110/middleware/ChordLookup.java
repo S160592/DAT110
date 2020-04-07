@@ -57,11 +57,11 @@ public class ChordLookup {
 
 			} else {
 
-				// search the local finger table of this node for the highest predecessor of id
+			
 
 				NodeInterface highest_pred = findHighestPredecessor(key);
 
-				return highest_pred.findSuccessor(key); // a remote call
+				return highest_pred.findSuccessor(key); 
 				}
 		}
 		
@@ -151,21 +151,12 @@ public class ChordLookup {
 						fileID = fileID.add(addresssize);
 					}
 				}
-				// if fileID <= nodeID, copy the file to the newly joined node.
+				
 				if (fileID.compareTo(nodeID) == -1 || fileID.compareTo(nodeID) == 0) {
 					System.out.println("fileID=" + fileID + " | nodeID= " + nodeID);
 					node.addKey(fileID); // re-assign file to this successor node
 					Message msg = succ.getFilesMetadata().get(fileID);
-					node.saveFileContent(msg.getNameOfFile(), fileID, msg.getBytesOfFile(), msg.isPrimaryServer()); // save
-																													// the
-																													// file
-																													// in
-																													// memory
-																													// of
-																													// the
-																													// newly
-																													// joined
-																													// node
+					node.saveFileContent(msg.getNameOfFile(), fileID, msg.getBytesOfFile(), msg.isPrimaryServer()); 
 					succ.removeKey(fileID); // remove the file key from the successor
 					succ.getFilesMetadata().remove(fileID); // also remove the saved file from memory
 				}
